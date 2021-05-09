@@ -21,8 +21,8 @@ Select enable / disable from the Plugins > FlyWithLua > Macros menu.
 
 ![xpYD](https://github.com/N1K340/xpYawDamper/blob/f5361176df047f72de71f60b90c7cb86bac52de1/src/xpYD_Menu.JPG)
 
-Once enabled, the rudder trim will be driven to neutralise the yaw moment, providing:
-a) The Yaw Damper is selected ON;
+Once enabled, the rudder trim will be driven to neutralise the yaw moment, providing:<br>
+a) The Yaw Damper is selected ON;<br>
 b) The aircraft is in the air.
 
 Disclaimer / Feedback
