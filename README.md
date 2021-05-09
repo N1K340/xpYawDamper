@@ -16,7 +16,7 @@ X-Plane 11 > Resources > plugins > FlyWithLua
 
 Application
 ============
-This script will start inactive. In order to use the active yaw damper feature with an aircraft, you will need to enable it:
+This script will start inactive. In order to use the active yaw damper feature with an aircraft, you will need to enable it:<br>
 Select enable / disable from the Plugins > FlyWithLua > Macros menu.
 
 ![xpYD](https://github.com/N1K340/xpYawDamper/blob/f5361176df047f72de71f60b90c7cb86bac52de1/src/xpYD_Menu.JPG)
