@@ -3,7 +3,11 @@ xpYawDamper
 Objective:
     - Read yaw moment
 	- Read YD status
-	- If YD is on, then adjust rudder trim to neutralise yaw moment
+	- If YD is on, then adjust rudder trim to neutralise yaw moment providing aircraft is airborne
+	
+Changelog:
+v1.0 - Initial Release
+
     ]]
 
 if not SUPPORTS_FLOATING_WINDOWS then
