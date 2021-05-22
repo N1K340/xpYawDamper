@@ -7,16 +7,9 @@ Objective:
 	
 Changelog:
 v1.0 - Initial Release
+v1.1 - Changed settings to a menu UI
 
     ]]
-
-if not SUPPORTS_FLOATING_WINDOWS then
-  -- to make sure the script doesn't stop old FlyWithLua versions
-  logMsg("imgui not supported, please update to latest version of FlyWithLUA")
-  return
-  else
-  print("xpYawDamper Loaded")
-end
 
 -- Modules
 require "graphics"
@@ -25,6 +18,7 @@ local LIP = require("LIP")
 -- Variables
  local xpYawSettings = {}
  local xpUseScript = false
+ local xpYawDampSettingsWindow = false
  local xpYawMoment = 0
  local xpRudTrim = 0
  local xpYawLoad = false
@@ -58,6 +52,7 @@ function ParsexpYawData()
 		xpYawSettings = LIP.load(AIRCRAFT_PATH .. "/xpYawDamper.ini")
 		xpUseScript = xpYawSettings.xpYawDamperSettings.xpUseScript
 		print("xpYawDamper Settings Loaded")
+		print("xpYawDamper plugin enabled set to " .. tostring(xpUseScript))
 	else
 		print("xpYawDamper Settings for aircraft not found")
 	end
@@ -72,7 +67,7 @@ end
 
 do_sometimes ("xpYawDampInitialise()")
 
-
+-- Fuction of the yaw axis
 
 function xpYawDampFuntion()
 	if YD_STATUS == 1 and WEIGHT_ON_WHEELS == 0 then
@@ -128,7 +123,60 @@ end
 
 do_often("xpYawDampMain()")
 
-function xpYawDampUse()
+-- Settings UI
+
+-- Create and Destroy Settings Window
+function OpenxpYawDampSettings_wnd()
+	ParsexpYawData()
+	xpYawDampSettings_wnd = float_wnd_create(450,200,1, true)
+	float_wnd_set_title(xpYawDampSettings_wnd, "xpYawDamper Settings")
+	float_wnd_set_imgui_builder(xpYawDampSettings_wnd, "xpYawDampSettings_content")
+	float_wnd_set_onclose(xpYawDampSettings_wnd, "ClosexpYawDampSettings_wnd")
+end
+
+function ClosexpYawDampSettings_wnd()
+	if xpYawDampSettings_wnd then
+		float_wnd_destroy(xpYawDampSettings_wnd)
+	end
+end
+
+-- Contents of Settings Window
+function xpYawDampSettings_content(xpYawDampSettings_wnd, x, y)
+	local winWidth = imgui.GetWindowWidth()
+	local winHeight = imgui.GetWindowHeight()
+	local titleText = "xpYawDamper Settings"
+	local titleTextWidth, titleTextHeight = imgui.CalcTextSize(titleText)
+	
+	imgui.SetCursorPos(winWidth / 2 - titleTextWidth / 2, imgui.GetCursorPosY())
+	imgui.TextUnformatted(titleText)
+	
+	imgui.Separator()
+        imgui.TextUnformatted("")
+        imgui.SetCursorPos(20, imgui.GetCursorPosY())
+        local changed, newVal = imgui.Checkbox("Use xpYawDamper with this aircraft?", xpUseScript)
+        if changed then
+            xpUseScript = newVal
+            CompilexpYawData()
+            print("xpYawDamper: Plugin enabled changed to " .. tostring(xpUseScript))
+        end
+end
+
+-- Call and close the window through menu
+function TogglexpYawDampSettings()
+	if not xpYawDampSettingsWindow then
+		OpenxpYawDampSettings_wnd()
+		xpYawDampSettingsWindow = true
+	elseif xpYawDampSettingsWindow then
+		ClosexpYawDampSettings_wnd()
+		xpYawDampSettingsWindow = false
+	end
+end
+
+add_macro("View xpYawDamp Settings", "OpenxpYawDampSettings_wnd()", "ClosexpYawDampSettings_wnd()", "deactivate")
+
+
+--Old enable functions removed with 1.1 update
+--[[function xpYawDampUse()
 	xpUseScript = true
 	print("User enabled xpYawDamper Script")
 	CompilexpYawData()
@@ -142,3 +190,4 @@ end
 
 add_macro("Enable xpYawDamper for this Aircraft", "xpYawDampUse()")
 add_macro("Turn Off xpYawDamper", "xpYawDampDontUse()")
+]]
