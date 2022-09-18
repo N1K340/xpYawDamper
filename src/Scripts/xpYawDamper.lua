@@ -1,21 +1,43 @@
---[[ Starting a new file, what an idiot
-xpYawDamper
-Objective:
-    - Read yaw moment
-	- Read YD status
-	- If YD is on, then adjust rudder trim to neutralise yaw moment providing aircraft is airborne
-	
-Changelog:
-v1.0 - Initial Release
-v1.1 - Changed settings to a menu UI
+--[[
+*****************************************************************************************
+* xpYawDamper
 
-    ]]
+* Objective:
+*    - Read yaw moment
+*	- Read YD status
+*	- If YD is on, then adjust rudder trim to neutralise yaw moment providing aircraft is airborne
+*	
+* Changelog:
+* v1.0 - Initial Release
+* v1.1 - Changed settings to a menu UI
+* v1.2 - Added feedback in the menu UI for rudder trim position and movement
+* 
+* Copyright (C) 2022  N1K340
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License version 3 as published by
+* the Free Software Foundation.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.
 
--- Modules
+*****************************************************************************************
+--]]
+
+--*************************************************************************************--
+--** 					               modules                    		     		 **--
+--*************************************************************************************--
 require "graphics"
 local LIP = require("LIP")
 
--- Variables
+--*************************************************************************************--
+--** 					               variables                   		     		 **--
+--*************************************************************************************--
 local xpYawSettings = {}
 local xpUseScript = false
 local xpYawDampSettingsWindow = false
@@ -27,11 +49,17 @@ local status_pl = ""
 local status_m = ""
 
 
--- Datarefs
+--*************************************************************************************--
+--** 					               datarefs                 		     		 **--
+--*************************************************************************************--
 dataref("YAW_MOMENT", "sim/flightmodel2/misc/yaw_string_angle")
 dataref("YD_STATUS", "sim/cockpit/switches/yaw_damper_on")
 dataref("RUD_TRIM", "sim/cockpit2/controls/rudder_trim")
 dataref("WEIGHT_ON_WHEELS", "sim/cockpit2/tcas/targets/position/weight_on_wheels", "readonly", 0)
+
+--*************************************************************************************--
+--** 					               	functions                    		     		 **--
+--*************************************************************************************--
 
 -- Save Settings
 function WritexpYawDamperData(xpYawSettings)
@@ -150,8 +178,9 @@ end
 
 do_often("xpYawDampMain()")
 
--- Settings UI
-
+--*************************************************************************************--
+--** 					               Settings and GUI            		     		 **--
+--*************************************************************************************--
 -- Create and Destroy Settings Window
 function OpenxpYawDampSettings_wnd()
 	ParsexpYawData()
@@ -173,7 +202,6 @@ function xpYawDampSettings_content(xpYawDampSettings_wnd, x, y)
 	local winHeight = imgui.GetWindowHeight()
 	local titleText = "xpYawDamper Settings"
 	local titleTextWidth, titleTextHeight = imgui.CalcTextSize(titleText)
-
 
 	imgui.SetCursorPos(winWidth / 2 - titleTextWidth / 2, imgui.GetCursorPosY())
 	imgui.TextUnformatted(titleText)
@@ -197,33 +225,4 @@ function xpYawDampSettings_content(xpYawDampSettings_wnd, x, y)
 	imgui.TextUnformatted(status_m .. "   " .. string.format("%.4f", RUD_TRIM) .. "  " .. status_pl)
 end
 
--- Call and close the window through menu
-function TogglexpYawDampSettings()
-	if not xpYawDampSettingsWindow then
-		OpenxpYawDampSettings_wnd()
-		xpYawDampSettingsWindow = true
-	elseif xpYawDampSettingsWindow then
-		ClosexpYawDampSettings_wnd()
-		xpYawDampSettingsWindow = false
-	end
-end
-
 add_macro("View xpYawDamp Settings", "OpenxpYawDampSettings_wnd()", "ClosexpYawDampSettings_wnd()", "deactivate")
-
-
---Old enable functions removed with 1.1 update
---[[function xpYawDampUse()
-	xpUseScript = true
-	print("User enabled xpYawDamper Script")
-	CompilexpYawData()
-end
-
-function xpYawDampDontUse()
-	xpUseScript = false
-	print("User disabled xpYawDamper Script with a baseball bat")
-	CompilexpYawData()
-end
-
-add_macro("Enable xpYawDamper for this Aircraft", "xpYawDampUse()")
-add_macro("Turn Off xpYawDamper", "xpYawDampDontUse()")
-]]
