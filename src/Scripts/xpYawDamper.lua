@@ -16,13 +16,16 @@ require "graphics"
 local LIP = require("LIP")
 
 -- Variables
- local xpYawSettings = {}
- local xpUseScript = false
- local xpYawDampSettingsWindow = false
- local xpYawMoment = 0
- local xpRudTrim = 0
- local xpYawLoad = false
- 
+local xpYawSettings = {}
+local xpUseScript = false
+local xpYawDampSettingsWindow = false
+local xpYawMoment = 0
+local xpRudTrim = 0
+local xpYawLoad = false
+local status_txt = ""
+local status_pl = ""
+local status_m = ""
+
 
 -- Datarefs
 dataref("YAW_MOMENT", "sim/flightmodel2/misc/yaw_string_angle")
@@ -32,7 +35,7 @@ dataref("WEIGHT_ON_WHEELS", "sim/cockpit2/tcas/targets/position/weight_on_wheels
 
 -- Save Settings
 function WritexpYawDamperData(xpYawSettings)
-    LIP.save(AIRCRAFT_PATH .. "/xpYawDamper.ini", xpYawSettings)
+	LIP.save(AIRCRAFT_PATH .. "/xpYawDamper.ini", xpYawSettings)
 	print("xpYawDamper Settings Saved")
 end
 
@@ -40,15 +43,15 @@ function CompilexpYawData()
 	xpYawSettings = {
 		xpYawDamperSettings = {
 			xpUseScript = xpUseScript,
-			}
 		}
+	}
 	WritexpYawDamperData(xpYawSettings)
 end
 
 function ParsexpYawData()
-	local f = io.open(AIRCRAFT_PATH .. "/xpYawDamper.ini","r")
-	if f ~= nil then 
-		io.close(f) 
+	local f = io.open(AIRCRAFT_PATH .. "/xpYawDamper.ini", "r")
+	if f ~= nil then
+		io.close(f)
 		xpYawSettings = LIP.load(AIRCRAFT_PATH .. "/xpYawDamper.ini")
 		xpUseScript = xpYawSettings.xpYawDamperSettings.xpUseScript
 		print("xpYawDamper Settings Loaded")
@@ -57,15 +60,15 @@ function ParsexpYawData()
 		print("xpYawDamper Settings for aircraft not found")
 	end
 end
-	
+
 function xpYawDampInitialise()
 	if xpYawLoad == false then
-	ParsexpYawData()
-	xpYawLoad = true
+		ParsexpYawData()
+		xpYawLoad = true
 	end
 end
 
-do_sometimes ("xpYawDampInitialise()")
+do_sometimes("xpYawDampInitialise()")
 
 -- Fuction of the yaw axis
 
@@ -76,49 +79,73 @@ function xpYawDampFuntion()
 			xpRudTrim = xpRudTrim + 0.0001
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
 			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			status_pl = "+"
+			status_m = ""
 		elseif xpYawMoment <= -0.1 and xpYawMoment >= -0.9 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim + 0.005
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
 			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			status_pl = "++"
+			status_m = ""
 		elseif xpYawMoment <= -1.0 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim + 0.025
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
-			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)	
-			
+			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			status_pl = "+++"
+			status_m = ""
 		elseif xpYawMoment >= 0.01 and xpYawMoment <= 0.09 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim - 0.0001
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
 			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			status_m = "-"
+			status_pl = ""
 		elseif xpYawMoment >= 0.1 and xpYawMoment <= 0.9 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim - 0.005
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
 			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			status_m = "--"
+			status_pl = ""
 		elseif xpYawMoment >= 1.0 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim - 0.025
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
 			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			status_m = "---"
+			status_pl = ""
+		elseif xpYawMoment >= -0.01 and xpYawMoment <= 0.01 then
+			status_m = ""
+			status_pl = ""
 		end
+	end
+	-- Status Text
+	if WEIGHT_ON_WHEELS == 1 then
+		status_txt = "YD Not Active on the ground"
+	end
+	if WEIGHT_ON_WHEELS == 0 and YD_STATUS == 0 then
+		status_txt = "YD is currently OFF"
+	end
+	if WEIGHT_ON_WHEELS == 0 and YD_STATUS == 1 then
+		status_txt = "YD is currently ACTIVE"
 	end
 end
 
 function xpYawDampSync()
 	if YD_STATUS == 1 then
 		if YAW_MOMENT ~= xpYawMoment then
-		   xpYawMoment = YAW_MOMENT
+			xpYawMoment = YAW_MOMENT
 		end
 	end
 end
 
 function xpYawDampMain()
-	if xpUseScript == true then	
+	if xpUseScript == true then
 		xpYawDampSync()
 		xpYawDampFuntion()
-	end	
+	end
 end
 
 do_often("xpYawDampMain()")
@@ -128,7 +155,7 @@ do_often("xpYawDampMain()")
 -- Create and Destroy Settings Window
 function OpenxpYawDampSettings_wnd()
 	ParsexpYawData()
-	xpYawDampSettings_wnd = float_wnd_create(450,200,1, true)
+	xpYawDampSettings_wnd = float_wnd_create(400, 200, 1, true)
 	float_wnd_set_title(xpYawDampSettings_wnd, "xpYawDamper Settings")
 	float_wnd_set_imgui_builder(xpYawDampSettings_wnd, "xpYawDampSettings_content")
 	float_wnd_set_onclose(xpYawDampSettings_wnd, "ClosexpYawDampSettings_wnd")
@@ -146,19 +173,28 @@ function xpYawDampSettings_content(xpYawDampSettings_wnd, x, y)
 	local winHeight = imgui.GetWindowHeight()
 	local titleText = "xpYawDamper Settings"
 	local titleTextWidth, titleTextHeight = imgui.CalcTextSize(titleText)
-	
+
+
 	imgui.SetCursorPos(winWidth / 2 - titleTextWidth / 2, imgui.GetCursorPosY())
 	imgui.TextUnformatted(titleText)
-	
+
 	imgui.Separator()
-        imgui.TextUnformatted("")
-        imgui.SetCursorPos(20, imgui.GetCursorPosY())
-        local changed, newVal = imgui.Checkbox("Use xpYawDamper with this aircraft?", xpUseScript)
-        if changed then
-            xpUseScript = newVal
-            CompilexpYawData()
-            print("xpYawDamper: Plugin enabled changed to " .. tostring(xpUseScript))
-        end
+	imgui.TextUnformatted("")
+	imgui.SetCursorPos(20, imgui.GetCursorPosY())
+	local changed, newVal = imgui.Checkbox("Use xpYawDamper with this aircraft?", xpUseScript)
+	if changed then
+		xpUseScript = newVal
+		CompilexpYawData()
+		print("xpYawDamper: Plugin enabled changed to " .. tostring(xpUseScript))
+	end
+	imgui.TextUnformatted("")
+	imgui.SetCursorPos(50, imgui.GetCursorPosY())
+	imgui.TextUnformatted(status_txt)
+	imgui.TextUnformatted("")
+	imgui.SetCursorPos(50, imgui.GetCursorPosY())
+	imgui.TextUnformatted("Current Yaw Trim position:")
+	imgui.SetCursorPos(100, imgui.GetCursorPosY())
+	imgui.TextUnformatted(status_m .. "   " .. string.format("%.4f", RUD_TRIM) .. "  " .. status_pl)
 end
 
 -- Call and close the window through menu
