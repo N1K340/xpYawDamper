@@ -8,9 +8,9 @@
 *	- If YD is on, then adjust rudder trim to neutralise yaw moment providing aircraft is airborne
 *	
 * Changelog:
-* v1.0 - Initial Release
-* v1.1 - Changed settings to a menu UI
-* v1.2 - Added feedback in the menu UI for rudder trim position and movement
+* v1.0 - Initial Release.
+* v1.1 - Changed settings to a menu UI.
+* v1.2 - Added feedback in the menu UI for rudder trim position and movement.
 * 
 * Copyright (C) 2022  N1K340
 * 
