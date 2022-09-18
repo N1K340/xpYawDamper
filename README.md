@@ -23,7 +23,7 @@ xpYawDamper will initialise inactive on every aircraft.
 In order to use the active yaw damper system open the menu by selecting:
     Plugins > FlyWithLua > FlyWithLua Macros > View xpYawDamp Settings
 
-![xpYD](https://github.com/N1K340/xpYawDamper/blob/f5361176df047f72de71f60b90c7cb86bac52de1/src/xpYD_Menu.JPG)
+![xpYD](https://github.com/N1K340/xpYawDamper/blob/main/xpYD_Menu.JPG)
 
 Enable the plugin by selecting the checkbox. This will need to be completed for each aircraft you wish to use the plugin with.
 
