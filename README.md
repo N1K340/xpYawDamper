@@ -47,3 +47,4 @@ Use of this code in other freeware projects is permitted with acknowledgment.
 * v1.0 - Initial Release.
 * v1.1 - Changed settings to a menu UI
 * v1.2 - Added feedback in the menu UI for rudder trim position and movement
+* v1.2.1 - Corrected bug resulting in trim actuation display remaining when YD disengaged.
