@@ -11,6 +11,7 @@
 * v1.0 - Initial Release.
 * v1.1 - Changed settings to a menu UI.
 * v1.2 - Added feedback in the menu UI for rudder trim position and movement.
+* v1.2.1 - Corrected bug with trim actuation display remaining when disconnected.
 * 
 * Copyright (C) 2022  N1K340
 * 
@@ -152,9 +153,13 @@ function xpYawDampFuntion()
 	-- Status Text
 	if WEIGHT_ON_WHEELS == 1 then
 		status_txt = "YD Not Active on the ground"
+		status_m = ""
+		status_pl = ""
 	end
 	if WEIGHT_ON_WHEELS == 0 and YD_STATUS == 0 then
 		status_txt = "YD is currently OFF"
+		status_m = ""
+		status_pl = ""
 	end
 	if WEIGHT_ON_WHEELS == 0 and YD_STATUS == 1 then
 		status_txt = "YD is currently ACTIVE"
