@@ -107,42 +107,42 @@ function xpYawDampFuntion()
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim + 0.0001
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
-			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			--print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
 			status_pl = "+"
 			status_m = ""
 		elseif xpYawMoment <= -0.1 and xpYawMoment >= -0.9 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim + 0.005
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
-			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			--print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
 			status_pl = "++"
 			status_m = ""
 		elseif xpYawMoment <= -1.0 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim + 0.025
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
-			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			--print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
 			status_pl = "+++"
 			status_m = ""
 		elseif xpYawMoment >= 0.01 and xpYawMoment <= 0.09 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim - 0.0001
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
-			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			--print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
 			status_m = "-"
 			status_pl = ""
 		elseif xpYawMoment >= 0.1 and xpYawMoment <= 0.9 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim - 0.005
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
-			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			--print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
 			status_m = "--"
 			status_pl = ""
 		elseif xpYawMoment >= 1.0 then
 			xpRudTrim = RUD_TRIM
 			xpRudTrim = xpRudTrim - 0.025
 			set("sim/cockpit2/controls/rudder_trim", xpRudTrim)
-			print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
+			--print("Yaw moment is " .. xpYawMoment .. " Rudder trim changed to " .. xpRudTrim)
 			status_m = "---"
 			status_pl = ""
 		elseif xpYawMoment >= -0.01 and xpYawMoment <= 0.01 then
